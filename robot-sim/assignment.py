@@ -19,6 +19,7 @@ def detect_boxes(unplaced_boxes, placed_boxes):
     for box in R.see():
         if ((box.info.code not in unplaced_boxes) and (box.info.code not in placed_boxes)):
             unplaced_boxes.append(box.info.code)
+            print('[STATUS] Detected new box {0}'.format(box.info.code))
     return 0
 
 
@@ -36,7 +37,7 @@ def scan_for_closest_box(desired_angular_disp, unplaced_boxes, placed_boxes):
     -> min_dist(double): The distance of the robot to the box closes to it
     -> min_rot_y(double): The anglular difference between the robot and the box closest to it
     '''
-    i, min_code, min_dist, min_rot_y = 0, 0, 0, 0
+    i, min_code, min_dist, min_rot_y = 0, -1, 0, 0
     i, min_code, min_dist, min_rot_y = detect_closest_box(i, min_code, min_dist, min_rot_y, 15, 0.05, desired_angular_disp, unplaced_boxes, placed_boxes)
     i, min_code, min_dist, min_rot_y = detect_closest_box(i, min_code, min_dist, min_rot_y, -15, 0.05, (desired_angular_disp*2), unplaced_boxes, placed_boxes)
     i, min_code, min_dist, min_rot_y = detect_closest_box(i, min_code, min_dist, min_rot_y, 15, 0.05, desired_angular_disp, unplaced_boxes, placed_boxes)
@@ -45,7 +46,8 @@ def scan_for_closest_box(desired_angular_disp, unplaced_boxes, placed_boxes):
 
 def detect_closest_box(i, min_code, min_dist, min_rot_y, speed, seconds, desired_angular_disp, unplaced_boxes, placed_boxes):
     '''
-    A function that returns the code of the box closest to the robot 
+    A function that rotates the robot  in one direction by a certain angular displacement and compares the distances of the 
+    various boxes it sees to find the closest one.
 
     Args:
     -> i(int): A flag that denotes whether detect_closest_box is being called for the first time
@@ -54,7 +56,9 @@ def detect_closest_box(i, min_code, min_dist, min_rot_y, speed, seconds, desired
     -> min_rot_y(double): The angle between the robot and the box assumed to be the closest
     -> speed(double): The speed of the wheels
 	-> seconds(double): The time interval
-    
+    -> desired_angular_disp(double): The (approximate) angular displacement by which the robot should rotate about 
+    -> unplaced_boxes(list[int]): A list containing the codes of the unplaced boxes
+    -> placed_boxes(list[int]): A list containing the codes of the placed boxes
 
     Return:
     -> i(int): A flag that denotes whether detect_closest_box was called for the first time
@@ -178,11 +182,18 @@ def move_to_target(target_box, angle_threshold, distance_threshold, unplaced_box
             detect_boxes(unplaced_boxes, placed_boxes)
         found, dist, rot_y = find_box(target_box, 15, 0.02, 1.0)
         if (found == 0):
+            print('[ERROR] Box {0} no longer visible! Searching...'.format(target_box))
             found, dist, rot_y = find_box(target_box, 15, 0.02, 10.0)
+            if (found == 1):
+                print('[STATUS] Found box {}'.format(target_box))
         if (found == 0):
             found, dist, rot_y = find_box(target_box, -15, 0.02, 20.0)
+            if (found == 1):
+                print('[STATUS] Found box {}'.format(target_box))
         if (found == 0):
             found, dist, rot_y = find_box(target_box, 15, 0.02, 10.0)
+            if (found == 1):
+                print('[STATUS] Found box {}'.format(target_box))
     return 1
 
 
@@ -194,6 +205,7 @@ def main():
 
     Return: None
     '''
+    print('[STATUS] Begun execution...')
     unplaced_boxes = [] # Create a list codes of the unplaced box 
     placed_boxes = [] # Create a list of codes of the placed box 
     a_th = 2.0 # Threshold for the control of the orientation
@@ -202,19 +214,29 @@ def main():
     grabbed_box = 0 # Variable to depict the code of the box currently held by the robot
 
     # Scan for the closest box and mark it as the prime box to which we bring the other boxes
+    print('[STATUS] Looking for nearby boxes...')
     min_code = scan_for_closest_box(12.0, unplaced_boxes, placed_boxes)
+    if (min_code == -1):
+        print('[ERROR] No boxes visible!')
+        exit(-1)
+    print('[STATUS] Set box {0} as the prime target...'.format(min_code))
     unplaced_boxes.remove(min_code)
     placed_boxes.append(min_code)
 
     while (len(unplaced_boxes) != 0):
         # Take the first box in the undetected boxes list and move towards it
         for box in unplaced_boxes:
+            print('[STATUS] Moving to box {0}...'.format(box))
             status = move_to_target(box, a_th, d_th, unplaced_boxes, placed_boxes)
             if status == 1:
                 # When the robot is near the box grab it
                 R.grab()
                 grabbed_box = box
                 break
+            elif status == -1:
+                print('[ERROR] Box {0} not visible. Shifting box {0} to back of queue...'.format(box))
+                unplaced_boxes.remove(box)
+                unplaced_boxes.append(box)
         # Find the prime box and move towards it
         move_to_target(min_code, a_th, prime_d_th, unplaced_boxes, placed_boxes)
         # When the robot is near the prime box release the target and back the robot up a bit
@@ -222,11 +244,10 @@ def main():
         prime_d_th = prime_d_th + 0.05 # Increase the placement threshold to account for crowding near the prime box
         placed_boxes.append(grabbed_box)
         unplaced_boxes.remove(grabbed_box)
+        print('[STATUS] Placed box {0} at target...'.format(grabbed_box))
         drive(-60, 0.5)
     else:
-        print('Finished placing all the boxes at the target!')
+        print('[STATUS] Finished placing all the boxes at the target...')
 
 
 main()
-
-# See if the function detect_boxes is being called every time the robot moves
