@@ -38,6 +38,7 @@ def scan_for_closest_box(speed, seconds, desired_angular_disp, unplaced_boxes, p
     -> min_dist(double): The distance of the robot to the box closes to it
     -> min_rot_y(double): The anglular difference between the robot and the box closest to it
     '''
+    # Potential area for major code optimization -> How? -> Not sure yet
     actual_angular_disp = 0
     i, min_code, min_dist, min_rot_y = 0, 0, 0, 0
     while (actual_angular_disp < desired_angular_disp):
@@ -57,7 +58,7 @@ def scan_for_closest_box(speed, seconds, desired_angular_disp, unplaced_boxes, p
         i, min_code, min_dist, min_rot_y = detect_closest_box(i, min_code, min_dist, min_rot_y)
         detect_boxes(unplaced_boxes, placed_boxes)
         actual_angular_disp = actual_angular_disp + (speed * seconds)
-    return min_code, min_dist, min_rot_y
+    return min_code, min_dist, min_rot_y # No need for min_dist and min_rot_y, should be removed
 
 
 def detect_closest_box(i, min_code, min_dist, min_rot_y):
@@ -157,12 +158,12 @@ def move_to_target(target_box, angle_threshold, distance_threshold):
     -> -1: Denotes that the box could not be found
     '''
     actual_ang_disp, dist, rot_y = 0, -1, -1
-    while (actual_ang_disp < 120.0):
+    while (actual_ang_disp < 120.0): # START: Potential area for optimization, can be included in find_box function
         dist, rot_y = find_box(target_box)
         if (dist != -1 and rot_y != -1):
             break
         turn(15, 0.05)
-        actual_ang_disp= actual_ang_disp + (15 * 0.05)
+        actual_ang_disp= actual_ang_disp + (15 * 0.05) # END
     if (dist == -1 and rot_y == -1):
         return -1
     while (dist >= distance_threshold):
@@ -174,7 +175,7 @@ def move_to_target(target_box, angle_threshold, distance_threshold):
             drive(60,0.05)
         dist, rot_y = find_box(target_box)
         if (dist == -1 and rot_y == -1):
-            desired_angular_disp = 30
+            desired_angular_disp = 30 # START: Can be included in find_box function
             actual_angular_disp = 0
             while (actual_angular_disp < desired_angular_disp):
                 turn(15, 0.02)
@@ -195,7 +196,7 @@ def move_to_target(target_box, angle_threshold, distance_threshold):
                 dist, rot_y = find_box(target_box)
                 if (dist != -1 and rot_y != -1):
                     break
-                actual_angular_disp = actual_angular_disp + (15 * 0.05)
+                actual_angular_disp = actual_angular_disp + (15 * 0.05) # END
     return 1
 
 
@@ -241,3 +242,5 @@ def main():
 
 
 main()
+
+# See if the function detect_boxes is being called every time the robot moves
