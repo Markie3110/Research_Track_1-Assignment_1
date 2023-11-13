@@ -95,7 +95,6 @@ for m in markers:
 Code Explanation
 ----------------------
 Test for pesudo
-```
 <pre>
 <b>FUNCTION</b> detect_boxes(UnplacedBoxesList, PlacedBoxesList):
 	'''
@@ -106,4 +105,3 @@ Test for pesudo
 	**ENDFOR**
 **ENDFUNCTION**
 </pre>
-```
