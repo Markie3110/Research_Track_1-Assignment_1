@@ -119,12 +119,12 @@ Given below is the pseudocode for the various functions:
 	 <b>SET</b> MinimumCode to -1
 	 <b>SET</b> MinimumDist to 0
 	 <b>SET</b> MinimumRot to 0
-	 <b>CALL</b> detect_closest_box to rotate the robot left and find the closest box
+	 <b>CALL</b> detect_closest_box() to rotate the robot left and find the closest box
 	 <b>SET</b> Flag to 1
 	 <b>SET</b> MinimumCode, MinimumDist, MinimumRot to the code, distance and rotation of the closest box
-	 <b>CALL</b> detect_closest_box to rotate the robot right and compare the current closest box distance with distances of newly detected boxes
+	 <b>CALL</b> detect_closest_box() to rotate the robot right and compare the current closest box distance with distances of newly detected boxes
 	 <b>SET</b> MinimumCode, MinimumDist, MinimumRot to the code, distance and rotation of the closest box
-	 <b>CALL</b> detect_closest_box to return the robot to a neutral position
+	 <b>CALL</b> detect_closest_box() to return the robot to a neutral position
 <b>RETURN</b> MinimumCode
 </pre>
 
@@ -145,8 +145,8 @@ Given below is the pseudocode for the various functions:
 				Set the MinimumCode, MinimumDist, MinimumRot to the code, dist and rot of the box currently visible
 			<b>ENDIF</b>
 		<b>ENDFOR</b>
-		<b>CALL</b> turn to turn the robot with a certain speed for a certain number of seconds
-		<b>CALL</b> detect_boxes to find previously unseen boxes
+		<b>CALL</b> turn() to rotate the robot with a certain speed for a certain number of seconds
+		<b>CALL</b> detect_boxes() to find previously unseen boxes
 		<b>COMPUTE</b> ActualAngularDisplacement as ActualAngularSpeed + (Seconds * Absolute value of Speed)
 	<b>ENDWHILE</b>
 <b>RETURN</b> Flag, MinimumCode, MinimumDist, MinimumRot
