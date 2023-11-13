@@ -94,14 +94,60 @@ for m in markers:
 
 Code Explanation
 ----------------------
-Test for pesudo
+The solution to the assignment was broken down into steps. Actions that are carried out repeatedly were coded into several functions that are called from a main function that controls the overall robot behaviour. In general the code works by first having the robot turn clockwise and counterclockwise to note down the codes of all boxes visible to it at the moment in its internal memory, as well as to mark the box closest to it. The position of this box, which we shall call the prime box, will be the one we bring all of the other boxes to. After finding the prime, the robot searches for every box stored in its memory and transports them to the prime. Once the robot places a box at the target, the robot updates its internal memory to reflect this change. The robot has also been programmed to keep on looking for new boxes it may have missed in the intial search, as it carries out its tasks. If any such box is detected, it is added to the list. Once all the boxes the robot has come across have been transported to the prime, the program ends.  
+Given below is the pseudocode for the various functions:  
+
+### detect_boxes ###
 <pre>
 <b>FUNCTION</b> detect_boxes(UnplacedBoxesList, PlacedBoxesList):
 	'''
 	A function designed to update a list keeping track of the boxes the robot has seen but not yet grabbed.
 	'''
-	**FOR** every Box visible to the robot **THEN**
+	<b>FOR</b> every Box visible to the robot <b>THEN</b>
 		Add code of Box to UnplacedBoxesList if not in UnplacedBoxesList and PlacedBoxesList
-	**ENDFOR**
-**ENDFUNCTION**
+	<b>ENDFOR</b>
+<b>ENDFUNCTION</b>
+</pre>
+
+### scan_for_closest_box ###
+<pre>
+	<b>FUNCTION</b> scan_for_closest_box(DesiredAngularDisp, UnplacedBoxesList, PlacedBoxesList)
+	 '''
+	 A function that pans the robot left and right by a certain displacement to find the box closest to it.
+	 '''
+	 <b>SET</b> Flag to 0
+	 <b>SET</b> MinimumCode to -1
+	 <b>SET</b> MinimumDist to 0
+	 <b>SET</b> MinimumRot to 0
+	 <b>CALL</b> detect_closest_box to rotate the robot left and find the closest box
+	 <b>SET</b> Flag to 1
+	 <b>SET</b> MinimumCode, MinimumDist, MinimumRot to the code, distance and rotation of the closest box
+	 <b>CALL</b> detect_closest_box to rotate the robot right and compare the current closest box distance with distances of newly detected boxes
+	 <b>SET</b> MinimumCode, MinimumDist, MinimumRot to the code, distance and rotation of the closest box
+	 <b>CALL</b> detect_closest_box to return the robot to a neutral position
+<b>RETURN</b> MinimumCode
+</pre>
+
+
+### detect_closest_box ###
+<pre>
+	<b>FUNCTION</b> detect_closest_box(Flag, MinimumCode, MinimumDist, MinimumRot, Speed, Seconds, DesiredAngularDisp, UnplacedBoxesList, PlacedBoxesList)
+	'''
+	A function that rotates the robot  in one direction by a certain angular displacement and compares the distances of the various boxes it sees to find the closest one.
+	'''
+	<b>SET</b> ActualAngularDisp to 0
+	<b>WHILE</b> ActualAngularDisp is less than DesiredAngularDisp <b>THEN</b>
+		<b>FOR</b> every Box visible to the robot <b>THEN</b>
+			<b>IF</b> Flag is 0 <b>THEN</b>
+				Set the MinimumCode, MinimumDist, MinimumRot to the code, dist and rot of the box currently visible
+			<b>ENDIF</b>
+			<b>IF</b> distance of Box is less than distance of the box currently visible <b>THEN</b>:
+				Set the MinimumCode, MinimumDist, MinimumRot to the code, dist and rot of the box currently visible
+			<b>ENDIF</b>
+		<b>ENDFOR</b>
+		<b>CALL</b> turn to turn the robot with a certain speed for a certain number of seconds
+		<b>CALL</b> detect_boxes to find previously unseen boxes
+		<b>COMPUTE</b> ActualAngularDisplacement as ActualAngularSpeed + (Seconds * Absolute value of Speed)
+	<b>ENDWHILE</b>
+<b>RETURN</b> Flag, MinimumCode, MinimumDist, MinimumRot
 </pre>
