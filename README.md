@@ -7,8 +7,7 @@ Table of Contents
 1. [How to Install](https://github.com/Markie3110/Research_Track_1-Assignment_1/tree/master#how-to-install)
 2. [How to run](https://github.com/Markie3110/Research_Track_1-Assignment_1/tree/master#how-to-run)
 3. [Robot API](https://github.com/Markie3110/Research_Track_1-Assignment_1/tree/master#robot-api)
-4. Code Explanation
-5. Alternative Solution
+4. [Code Explanation](https://github.com/Markie3110/Research_Track_1-Assignment_1#code-explanation)
 
 How to Install
 ----------------------
@@ -99,11 +98,9 @@ Given below is the pseudocode for the various functions:
 
 
 ### detect_boxes ###
+A function designed to update a list keeping track of the boxes the robot has seen but not yet grabbed.
 <pre>
 <b>FUNCTION</b> detect_boxes(UnplacedBoxesList, PlacedBoxesList):
-	'''
-	A function designed to update a list keeping track of the boxes the robot has seen but not yet grabbed.
-	'''
 	<b>FOR</b> every Box visible to the robot <b>THEN</b>
 		Add code of Box to UnplacedBoxesList if not in UnplacedBoxesList and PlacedBoxesList
 	<b>ENDFOR</b>
@@ -112,11 +109,9 @@ Given below is the pseudocode for the various functions:
 
 
 ### scan_for_closest_box ###
+A function that pans the robot left and right by a certain displacement to find the box closest to it.
 <pre>
 	<b>FUNCTION</b> scan_for_closest_box(DesiredAngularDisp, UnplacedBoxesList, PlacedBoxesList)
-		 '''
-		 A function that pans the robot left and right by a certain displacement to find the box closest to it.
-		 '''
 		 <b>SET</b> Flag to 0
 		 <b>SET</b> MinimumCode to -1
 		 <b>SET</b> MinimumDist to 0
@@ -133,11 +128,9 @@ Given below is the pseudocode for the various functions:
 
 
 ### detect_closest_box ###
+A function that rotates the robot  in one direction by a certain angular displacement and compares the distances of the various boxes it sees to find the closest one.
 <pre>
 	<b>FUNCTION</b> detect_closest_box(Flag, MinimumCode, MinimumDist, MinimumRot, Speed, Seconds, DesiredAngularDisp, UnplacedBoxesList, PlacedBoxesList)
-		'''
-		A function that rotates the robot  in one direction by a certain angular displacement and compares the distances of the various boxes it sees to find the closest one.
-		'''
 		<b>SET</b> ActualAngularDisp to 0
 		<b>WHILE</b> ActualAngularDisp is less than DesiredAngularDisp <b>THEN</b>
 			<b>FOR</b> every Box visible to the robot <b>THEN</b>
@@ -157,11 +150,9 @@ Given below is the pseudocode for the various functions:
 
 
 ### drive ###
+Function for setting a linear velocity.
 <pre>
 	<b>FUNCTION</b> drive(Speed, Seconds)
-		'''
-		Function for setting a linear velocity.
-		'''
 		<b>SET</b> the robots left and right motors velocity to Speed
 		<b>WAIT</b> for duration Seconds
 		<b>SET</b> the robots left and right motors velocity to 0
@@ -171,11 +162,9 @@ Given below is the pseudocode for the various functions:
 
 
 ### turn ###
+Function for setting a angular velocity.
 <pre>
 	<b>FUNCTION</b> turn(Speed, Seconds)
-		'''
-		Function for setting a linear velocity.
-		'''
 		<b>SET</b> the robots left velocity to Speed
 		<b>SET</b> the robots right motors velocity to -Speed
 		<b>WAIT</b> for duration Seconds
@@ -185,12 +174,9 @@ Given below is the pseudocode for the various functions:
 
 
 ### find_box ###
+A function that looks for the desired box by rotating the robot with an angular displacement as a limit and returning its distance and angle from the robot if found.
 <pre>
 	<b>FUNCTION</b> find_box (TargetBox, Speed, Seconds, DesiredAngularDisp)
-		'''
-		A function that looks for the desired box by rotating the robot with an angular displacement 
-		as a limit and returning its distance and angle from the robot if found.
-		'''
 		<b>SET</b> ActualAngularDisp to 0
 		<b>SET</b> Found to 0
 		<b>SET</b> Dist to 0
@@ -214,11 +200,9 @@ Given below is the pseudocode for the various functions:
 
 
 ### move_to_target ###
+A function that finds and then moves the robot to a particular target box to within a certain angular and distance threshold.
 <pre>
 	<b>FUNCTION</b> move_to_target(TargetBox, AngleThreshold, DistanceThreshold, UnplacedBoxes, PlacedBoxes)
-		'''
-		A function that finds and then moves the robot to a particular target box to within a certain angular and distance threshold.
-		'''
 		<b>DECLARE</b> Distance
 		<b>DECLARE</b> Rotation
 		<b>CALL</b> find_box to point the robot to the direction of TargetBox and to <b>SET</b> Distance and Rotation to the distance and rotation of TargetBox
@@ -252,6 +236,7 @@ Given below is the pseudocode for the various functions:
 
 
 ### main ###
+The main function that controls overall robot behaviour.
 <pre>
 	<b>FUNCTION</b> main
 		<b>DECLARE</b> UnplacedBoxesList
