@@ -95,11 +95,11 @@ for m in markers:
 Code Explanation
 ----------------------
 Test for pesudo
->**FUNCTION** detect_boxes(UnplacedBoxesList, PlacedBoxesList)  
->	'''  
->	A function designed to update a list keeping track of the boxes the robot has seen but not yet grabbed.  
->	'''  
->	**FOR** every Box visible to the robot **THEN**  
->		Add code of Box to UnplacedBoxesList if not in UnplacedBoxesList and PlacedBoxesList  
->	**ENDFOR**
+**FUNCTION** detect_boxes(UnplacedBoxesList, PlacedBoxesList)  
+>    '''  
+>	   A function designed to update a list keeping track of the boxes the robot has seen but not yet grabbed.  
+>	   '''  
+>	   **FOR** every Box visible to the robot **THEN**  
+>		      Add code of Box to UnplacedBoxesList if not in UnplacedBoxesList and PlacedBoxesList  
+>	   **ENDFOR**
 >**ENDFUNCTION**
