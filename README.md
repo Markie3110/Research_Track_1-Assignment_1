@@ -96,7 +96,7 @@ Code Explanation
 ----------------------
 Test for pesudo
 ```
-**FUNCTION** detect_boxes(UnplacedBoxesList, PlacedBoxesList):
+<b>FUNCTION</b> detect_boxes(UnplacedBoxesList, PlacedBoxesList):
 	'''
 	A function designed to update a list keeping track of the boxes the robot has seen but not yet grabbed.
 	'''
