@@ -30,30 +30,10 @@ To run the solution go to robot-sim in your local system and type the following:
 python3 run.py assignment.py
 ```
 
-## Exercise
------------------------------
-
-To run one or more scripts in the simulator, use `run.py`, passing it the file names. 
-
-I am proposing you three exercises, with an increasing level of difficulty.
-The instruction for the three exercises can be found inside the .py files (exercise1.py, exercise2.py, exercise3.py).
-
-When done, you can run the program with:
-
-```bash
-$ python run.py exercise1.py
-```
-
-You have also the solutions of the exercises (folder solutions)
-
-```bash
-$ python run.py solutions/exercise1_solution.py
-```
-
 Robot API
 ---------
 
-The API for controlling a simulated robot is designed to be as similar as possible to the [SR API][sr-api].
+Although already explained in the *[Problem Statement Repo](https://github.com/CarmineD8/python_simulator)*, the explanation for the Robot API is repeated here given that the entire code is dependent on its functionalities. 
 
 ### Motors ###
 
@@ -112,4 +92,14 @@ for m in markers:
         print " - Arena marker {0} is {1} metres away".format( m.info.offset, m.dist )
 ```
 
-[sr-api]: https://studentrobotics.org/docs/programming/sr/
+Code Explanation
+----------------------
+Test for pesudo
+>**FUNCTION** detect_boxes(UnplacedBoxesList, PlacedBoxesList):
+>	'''
+>	A function designed to update a list keeping track of the boxes the robot has seen but not yet grabbed.
+>	'''
+>	**FOR** every Box visible to the robot **THEN**
+>		Add code of Box to UnplacedBoxesList if not in UnplacedBoxesList and PlacedBoxesList
+>	**ENDFOR**
+>**ENDFUNCTION**
