@@ -97,6 +97,7 @@ Code Explanation
 The solution to the assignment was broken down into steps. Actions that are carried out repeatedly were coded into several functions that are called from a main function that controls the overall robot behaviour. In general the code works by first having the robot turn clockwise and counterclockwise to note down the codes of all boxes visible to it at the moment in its internal memory, as well as to mark the box closest to it. The position of this box, which we shall call the prime box, will be the one we bring all of the other boxes to. After finding the prime, the robot searches for every box stored in its memory and transports them to the prime. Once the robot places a box at the target, the robot updates its internal memory to reflect this change. The robot has also been programmed to keep on looking for new boxes it may have missed in the intial search, as it carries out its tasks. If any such box is detected, it is added to the list. Once all the boxes the robot has come across have been transported to the prime, the program ends.  
 Given below is the pseudocode for the various functions:  
 
+
 ### detect_boxes ###
 <pre>
 <b>FUNCTION</b> detect_boxes(UnplacedBoxesList, PlacedBoxesList):
@@ -108,6 +109,7 @@ Given below is the pseudocode for the various functions:
 	<b>ENDFOR</b>
 <b>ENDFUNCTION</b>
 </pre>
+
 
 ### scan_for_closest_box ###
 <pre>
@@ -127,6 +129,7 @@ Given below is the pseudocode for the various functions:
 	 <b>CALL</b> detect_closest_box() to return the robot to a neutral position
 <b>RETURN</b> MinimumCode
 </pre>
+
 
 
 ### detect_closest_box ###
@@ -150,4 +153,136 @@ Given below is the pseudocode for the various functions:
 		<b>COMPUTE</b> ActualAngularDisplacement as ActualAngularSpeed + (Seconds * Absolute value of Speed)
 	<b>ENDWHILE</b>
 <b>RETURN</b> Flag, MinimumCode, MinimumDist, MinimumRot
+</pre>
+
+
+### drive ###
+<pre>
+	FUNCTION drive(Speed, Seconds)
+	'''
+	Function for setting a linear velocity.
+	'''
+	Set the robots left and right motors velocity to Speed
+	Wait for duration Seconds
+	Set the robots left and right motors velocity to 0
+ENDFUNCTION
+</pre>
+
+
+
+### turn ###
+<pre>
+	FUNCTION turn(Speed, Seconds)
+	'''
+	Function for setting a linear velocity.
+	'''
+	Set the robots left velocity to Speed
+	Set the robots right motors velocity to -Speed
+	Wait for duration Seconds
+	Set the robots left and right motors velocity to 0
+ENDFUNCTION
+</pre>
+
+
+### find_box ###
+<pre>
+	FUNCTION find_box (TargetBox, Speed, Seconds, DesiredAngularDisp)
+	'''
+	A function that looks for the desired box by rotating the robot with an angular displacement 
+	as a limit and returning its distance and angle from the robot if found.
+	'''
+	SET ActualAngularDisp to 0
+	SET Found to 0
+	Set Dist to 0
+	Set RotY to 0
+	WHILE ActualAngularDisp is less than DesiredAngularDisp
+		FOR every Box visible to the robot:
+			IF code of Box is TargetBox THEN
+				SET Dist, RotY to distance, rotation of the box currently visible
+				SET Found as 1
+				BREAK for loop
+			ENDIF
+		ENDFOR
+		IF Found is 1 THEN
+			BREAK while loop
+		ENDIF
+	 	CALL turn to turn the robot with a certain speed for a certain number of seconds
+		COMPUTE ActualAngularDisp as ActualAngularDisp + (Speed * Seconds) 
+	ENDWHILE
+RETURN Found, Dist, RotY
+</pre>
+
+
+### move_to_target ###
+FUNCTION move_to_target(TargetBox, AngleThreshold, DistanceThreshold, UnplacedBoxes, PlacedBoxes)
+	'''
+	A function that finds and then moves the robot to a particular target box to within a certain angular and distance threshold.
+	'''
+	DECLARE Distance
+	DECLARE Rotation
+	CALL find_box to point the robot to the direction of TargetBox and to SET Distance and Rotation to the distance and rotation of TargetBox
+	IF FOUND is 0 THEN:
+		RETURN -1
+	ENDIF
+	WHILE Distance is greater than DistanceThreshold
+		IF Rotation is less than -AngleThreshold THEN
+			CALL turn to turn the robot clockwise
+			CALL detect_boxes to find previously unseen boxes 
+		ELIF Rotation is greater than AngleThreshold THEN:
+			CALL turn to turn the robot counterclockwise
+			CALL detect_boxes to find previously unseen boxes
+		ELSE:
+			CALL drive to move the robot forward 
+			CALL detect_boxes to find previously unseen boxes
+		ENDIF
+		CALL find_box to point the robot to the direction of TargetBox and to SET Distance and Rotation to the distance and rotation of TargetBox
+		IF Found is 0 THEN
+			CALL find_box to pan the robot clockwise till a certain displacement and find TargetBox
+		ENDIF
+		IF Found is 0 THEN
+			CALL find_box to pan the robot counterclockwise till a certain displacement and find TargetBox
+		ENDIF
+		IF Found is 0 THEN
+			CALL find_box to return the robot to its neutral position
+		ENDIF
+	ENDWHILE
+RETURN 1
+
+
+### main ###
+<pre>
+	FUNCTION main
+	DECLARE UnplacedBoxesList
+	DECLARE PlacedBoxesList
+	SET AngularThreshold to 2
+	SET DistanceThreshold to 0.4
+	SET PlacementThreshold to 0.53
+	SET GrabbedBox to 0
+
+	CALL scan_for_closest_box to find the boxes near the robot by panning it left and right and adding them to UnplacedBoxesList
+	SET MinCode as code of the box closest to the robot 
+	IF MinCode is -1 THEN:
+		Exit function as no boxes visible
+	ENDIF
+	MOVE MinCode to PlacedBoxesList
+	REMOVE MinCode from UnplacedBoxesList
+	
+	WHILE UnplacedBoxesList is not empty 
+		FOR every Box in UnplacedBoxesList
+			CALL move_to_target to move the robot to the location of Box
+			IF robot at Box location THEN
+				Grab the box
+				SET GrabbedBox as code of Box
+				BREAK for loop
+			ELIF Box not visible to the robot THEN
+				MOVE Box to the back of UnplacedBoxesList
+			ENDIF
+		ENDFOR
+		CALL move_to_target to move the robot to the location of box with code MinCode
+		Release the grabbed box
+		COMPUTE PlacementThreshold as SUM of PlacementThreshold and 0.05
+		REMOVE GrabbedBox from UnplacedBoxesList
+		ADD GrabbedBox to PlacedBoxesList
+	ENDWHILE
+ENDFUNCTION
 </pre>
