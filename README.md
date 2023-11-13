@@ -3,6 +3,7 @@ Python Robotics Simulator
 
 This is a simple, portable robot simulator developed by [Student Robotics](https://studentrobotics.org).
 Some of the arenas and the exercises have been modified for the Research Track I course
+This is a test.
 
 Installing and running
 ----------------------
