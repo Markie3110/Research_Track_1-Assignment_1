@@ -1,18 +1,14 @@
 Research Track 1 - Assignment 1 Solution
 ================================
-The following repository contains the solution to the first assignment for the Research Track 1 Course, found in the Robotics Masters Programme at the University of Genoa, Italy. The problem statement along with any necessary files can be found at https://github.com/CarmineD8/python_simulator. Within the linked repository is a simulator that is capable of depicting a differential drive robot and some boxes in an arena. The goal of the assignment is to program the robot with the help of some predefined functions such that it can detect all the boxes within the arena space, and move them to a single position. The position can be arbitary and it is for the programmer to decide how they want to carry out the execution.
+The following repository contains the solution to the first assignment for the Research Track 1 Course, found in the Robotics Masters Programme at the University of Genoa, Italy. The problem statement along with any necessary files can be found at *https://github.com/CarmineD8/python_simulator*. Within the linked repository is a simulator that is capable of depicting a differential drive robot and some boxes in an arena. The goal of the assignment is to program the robot with the help of some predefined functions such that it can detect all the boxes within the arena space, and move them to a single position. The position can be arbitary and it is for the programmer to decide how they want to carry out the execution.
 
 Table of Contents
 ----------------------
-1. Project Title
-2. Project Description
-3. Table of Contents
-4. How to Install
-5. How to run
-6. Robot API
-7. Code Explanation
-8. Alternative Solution
-9. Authors Note
+1. [How to Install](https://github.com/Markie3110/Research_Track_1-Assignment_1/tree/master#how-to-install)
+2. [How to run](https://github.com/Markie3110/Research_Track_1-Assignment_1/tree/master#how-to-run)
+3. [Robot API](https://github.com/Markie3110/Research_Track_1-Assignment_1/tree/master#robot-api)
+4. Code Explanation
+5. Alternative Solution
 
 How to Install
 ----------------------
